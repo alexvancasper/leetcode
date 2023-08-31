@@ -51,57 +51,38 @@ func AddNodeBack(head, node *ListNode) *ListNode {
 
 /*
 Solution: Accepted
-O(n) time
+O(n) time, тут реальная сложность O((k%n)n), где k количество rotate, n - количество элементов.
 O(1) space
-За один проход по списку мы находим левый(l) и правый(r) элемент для свопа.
-Правый элемент находится путем сохранения дистанции k от указателя curr.
-т.е. если между r и curr дистанция больше чем k, то двигаем r на шаг ближе к curr.
+Решение так себе, можно написать лучше.
 */
-func swapNodes(head *ListNode, k int) *ListNode {
-	if head == nil {
+func rotateRight(head *ListNode, k int) *ListNode {
+	var first, prev, curr *ListNode
+	if head == nil || head.Next == nil {
 		return head
 	}
-	var l, r, curr *ListNode
-	var n, step int
-	n = 1
-	step = 1
-	curr = head
-	r = curr
-	for curr != nil {
-		if n == k {
-			l = curr
-		}
-		if step > k {
-			r = r.Next
-			step--
-		}
-		step++
+	c := head
+	n := 0
+	for c != nil {
 		n++
-		curr = curr.Next
+		c = c.Next
 	}
-
-	l.Val, r.Val = r.Val, l.Val
-	return head
-}
-
-/*
-Печатает k-ый элемент с конца списка.
-*/
-func printNodes(head *ListNode, k int) *ListNode {
-	var prev, curr *ListNode
-	curr = head
-	prev = curr
-	step := 1
-	for curr != nil {
-		if step > k {
+	rotates := k % n
+	for rotates > 0 {
+		prev = &ListNode{}
+		first = head
+		curr = head
+		prev.Next = curr
+		for curr != nil {
+			if curr.Next == nil {
+				head = curr
+				head.Next = first
+				prev.Next = nil
+				break
+			}
 			prev = prev.Next
-			step--
+			curr = curr.Next
 		}
-		step++
-		curr = curr.Next
-	}
-	if curr == nil {
-		fmt.Println("right element for swapping: ", prev.Val)
+		rotates--
 	}
 	return head
 }
@@ -110,16 +91,17 @@ func main() {
 	head := &ListNode{Val: 1, Next: nil}
 	head = AddToEnd(head, 2)
 	head = AddToEnd(head, 3)
-	head = AddToEnd(head, 4)
+	// head = AddToEnd(head, 4)
 	// head = AddToEnd(head, 5)
 	// head = AddToEnd(head, 6)
 	// head1 = AddToEnd(head1, 7)
 	fmt.Printf("LIST 1: ")
 	head.Print()
 
-	k := 1
+	k := 2000000000
 	fmt.Printf("Modified: ")
-	root := swapNodes(head, k)
+	root := rotateRight(head, k)
+
 	root.Print()
 
 }

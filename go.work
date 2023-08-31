@@ -7,4 +7,6 @@ use (
 	./25.Reverse_Nodes_in_k-Group
 	./24.Swap_Nodes_in_Pairs
 	./1721.Swapping_Nodes_in_a_Linked_List
+	./61.Rotate_List
+	./19.Remove_Nth_Node_From_End_of_List
 )

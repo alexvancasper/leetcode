@@ -53,55 +53,38 @@ func AddNodeBack(head, node *ListNode) *ListNode {
 Solution: Accepted
 O(n) time
 O(1) space
-За один проход по списку мы находим левый(l) и правый(r) элемент для свопа.
-Правый элемент находится путем сохранения дистанции k от указателя curr.
-т.е. если между r и curr дистанция больше чем k, то двигаем r на шаг ближе к curr.
+Хорошее решение, побило все 100% по памяти. и 60% по runtime
 */
-func swapNodes(head *ListNode, k int) *ListNode {
-	if head == nil {
-		return head
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	if head.Next == nil {
+		return nil
 	}
-	var l, r, curr *ListNode
-	var n, step int
-	n = 1
-	step = 1
+	var pp, prev, curr *ListNode
 	curr = head
-	r = curr
-	for curr != nil {
-		if n == k {
-			l = curr
-		}
-		if step > k {
-			r = r.Next
-			step--
-		}
-		step++
-		n++
-		curr = curr.Next
-	}
-
-	l.Val, r.Val = r.Val, l.Val
-	return head
-}
-
-/*
-Печатает k-ый элемент с конца списка.
-*/
-func printNodes(head *ListNode, k int) *ListNode {
-	var prev, curr *ListNode
-	curr = head
+	pp = curr
 	prev = curr
 	step := 1
+	stepPP := 1
 	for curr != nil {
-		if step > k {
+		if step > n {
 			prev = prev.Next
 			step--
 		}
+		if stepPP > n+1 {
+			pp = pp.Next
+			stepPP--
+		}
 		step++
+		stepPP++
 		curr = curr.Next
 	}
 	if curr == nil {
-		fmt.Println("right element for swapping: ", prev.Val)
+		if pp == prev {
+			head = prev.Next
+		} else {
+			pp.Next = prev.Next
+		}
+
 	}
 	return head
 }
@@ -109,17 +92,17 @@ func printNodes(head *ListNode, k int) *ListNode {
 func main() {
 	head := &ListNode{Val: 1, Next: nil}
 	head = AddToEnd(head, 2)
-	head = AddToEnd(head, 3)
-	head = AddToEnd(head, 4)
+	// head = AddToEnd(head, 3)
+	// head = AddToEnd(head, 4)
 	// head = AddToEnd(head, 5)
-	// head = AddToEnd(head, 6)
+	head = AddToEnd(head, 6)
 	// head1 = AddToEnd(head1, 7)
 	fmt.Printf("LIST 1: ")
 	head.Print()
 
-	k := 1
-	fmt.Printf("Modified: ")
-	root := swapNodes(head, k)
+	k := 3
+	// fmt.Printf("Modified: ")
+	root := removeNthFromEnd(head, k)
 	root.Print()
 
 }
