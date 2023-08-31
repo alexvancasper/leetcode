@@ -145,59 +145,78 @@ func UnionListNodes(head *ListNode, ptrs []*ListNode) *ListNode {
 
 /*
 Solution: Accepted
-Runtime: 5ms
-Memory: 3.7MB
-not so good solution, but I created it. :)
 O(n) time
-O(k) additional memory- по честному это O(n)
-Смысл в том, что мы собираем K нод в массив, а затем добавляем его в новый лист.
-Если массив забит не полностью, значит читаем массив сначала и добавляем в конец нового листа
-Если массив забит полностью, то читаем массив с конца и добавляем ноды в конец листа.
+O(1) space
+За один проход по списку мы находим левый(l) и правый(r) элемент для свопа.
+Правый элемент находится путем сохранения дистанции k от указателя curr.
+т.е. если между r и curr дистанция больше чем k, то двигаем r на шаг ближе к curr.
 */
-func reverseKGroup(head *ListNode, k int) *ListNode {
-	ptrs := make([]*ListNode, k)
-	newList := &ListNode{}
-	curr := head
-	i := 0
+func swapNodes(head *ListNode, k int) *ListNode {
+	if head == nil {
+		return head
+	}
+	var l, r, curr *ListNode
+	var n, step int
+	n = 1
+	step = 1
+	curr = head
+	r = curr
 	for curr != nil {
-		if i < k {
-			ptrs[i] = curr
-			i++
-		} else {
-			newList = UnionListNodes(newList, ptrs) // UnionListNodesBack
-			ptrs[0] = curr
-			i = 1
+		if n == k {
+			l = curr
 		}
-
+		if step > k {
+			r = r.Next
+			step--
+		}
+		step++
+		n++
 		curr = curr.Next
 	}
 
-	newList = UnionListNodes(newList, ptrs) // UnionListNodesForward
-	return newList.Next
+	l.Val, r.Val = r.Val, l.Val
+	return head
+}
+
+/*
+Печатает k-ый элемент с конца списка.
+*/
+func printNodes(head *ListNode, k int) *ListNode {
+	var prev, curr *ListNode
+	curr = head
+	prev = curr
+	step := 1
+	for curr != nil {
+		if step > k {
+			prev = prev.Next
+			step--
+		}
+		step++
+		curr = curr.Next
+	}
+	if curr == nil {
+		fmt.Println("right element for swapping: ", prev.Val)
+	}
+	return head
 }
 
 func main() {
-	head1 := &ListNode{Val: 1, Next: nil}
-	head1 = AddToEnd(head1, 2)
-	head1 = AddToEnd(head1, 3)
-	// head1 = AddToEnd(head1, 4)
-	// head1 = AddToEnd(head1, 5)
-	// head1 = AddToEnd(head1, 6)
+	head := &ListNode{Val: 1, Next: nil}
+	head = AddToEnd(head, 2)
+	head = AddToEnd(head, 3)
+	head = AddToEnd(head, 4)
+	// head = AddToEnd(head, 5)
+	// head = AddToEnd(head, 6)
 	// head1 = AddToEnd(head1, 7)
 	fmt.Printf("LIST 1: ")
-	head1.Print()
+	head.Print()
 
-	// head2 := &ListNode{Val: 6, Next: nil}
-	// head2 = AddToEnd(head2, 7)
-	// head2 = AddToEnd(head2, 8)
-	// head2 = AddToEnd(head2, 9)
-	// head2 = AddToEnd(head2, 10)
-	// fmt.Printf("LIST 2: ")
-	// head2.Print()
-
-	// root := UnionLists(head1, head2)
+	k := 1
+	// printNodes(head, k)
 	fmt.Printf("Modified: ")
-	root := reverseKGroup(head1, 3)
+	root := swapNodes(head, k)
+
 	// root := reverseLinkedListOptimized(head1)
 	root.Print()
+
 }
