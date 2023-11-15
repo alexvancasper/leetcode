@@ -10,4 +10,7 @@ use (
 	./61.Rotate_List
 	./19.Remove_Nth_Node_From_End_of_List
 	./7.Reverse_Integer
+	./347.Top_K_Frequent_Elements
+	./helpers/heap
+	./2109.Adding_Spaces_to_a_String
 )
