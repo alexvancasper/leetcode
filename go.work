@@ -13,4 +13,5 @@ use (
 	./347.Top_K_Frequent_Elements
 	./helpers/heap
 	./2109.Adding_Spaces_to_a_String
+	./2219.Maximum_Sum_Score_of_Array
 )
